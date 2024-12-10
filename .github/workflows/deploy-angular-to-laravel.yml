@@ -1,0 +1,58 @@
+name: Build and Deploy Angular to Laravel
+
+# Disparador: Detectar un push en la rama `main`
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Clonar el repositorio de Angular
+    - name: Checkout Angular Repository
+      uses: actions/checkout@v3
+
+    # 2. Configurar Node.js
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 20.12.0
+
+    # 3. Instalar dependencias y construir Angular
+    - name: Install and Build Angular
+      run: |
+        npm install --force
+        npm run build 
+      working-directory: ./ # Cambia si el Angular project está en un subdirectorio
+
+    # 4. Clonar el repositorio Laravel
+    - name: Clone Laravel Repository
+      run: |
+        git clone https://x-access-token:${{ secrets.SECOND_REPO_TOKEN_LARAVEL_EXAMPLE }}@github.com/AlanMelendez/laravel_test_githubactions.git githubactions-laravel
+      env:
+        GIT_SSL_NO_VERIFY: true # Si usas certificados auto-firmados
+
+    # 5. Copiar el compilado Angular al Laravel
+    - name: Move Angular Build to Laravel
+      run: |
+        cp -r dist/githubactions-angular/browser/* githubactions-laravel/public/
+        echo "Build moved to Laravel public folder."
+
+    # 6. Actualizar welcome.blade.php
+    - name: Update Blade Template
+      run: |
+        cat githubactions-laravel/public/index.html > githubactions-laravel/resources/views/welcome.blade.php
+        echo "Blade template updated."
+
+    # 7. Commit y Push al repositorio Laravel
+    - name: Commit and Push to Laravel Repository
+      run: |
+        cd githubactions-laravel
+        git config user.name "GitHub Actions Test User"
+        git config user.email "actions@github.com"
+        git add .
+        git commit -m "Update Angular Build"
+        git push
