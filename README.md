@@ -1,27 +1,37 @@
-# GithubactionsAngular
+# GithubactionsAngular - **Guía para Configurar GitHub Actions para Despliegues Automáticos**
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.8.
+## **1. ¿Qué es GitHub Actions?**
+GitHub Actions es una herramienta de integración y entrega continua (CI/CD) integrada en GitHub. Permite automatizar tareas como pruebas, builds y despliegues cada vez que se realizan cambios en un repositorio.
 
-## Development server
+---
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## **2. Requisitos Previos**
+Antes de configurar GitHub Actions, asegúrate de cumplir con los siguientes requisitos:
 
-## Code scaffolding
+- **Acceso de escritura** al repositorio donde se configurarán los workflows.
+- **Conocimiento básico de YAML**, ya que los workflows de GitHub Actions se definen en este formato.
+- **Acceso al repositorio relacionado (Laravel, en este caso)**.
+- **Node.js instalado localmente** si necesitas probar manualmente el build de Angular.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+---
 
-## Build
+## **3. Configuraciones Iniciales**
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+### **3.1 Crear el Archivo de Workflow**
+1. En el repositorio de Angular:
+   - Crea un directorio llamado `.github/workflows/` en el nivel raíz del repositorio:
+     ```bash
+     mkdir -p .github/workflows
+     ```
+   - Dentro de esa carpeta, crea un archivo YAML para definir el flujo de trabajo:
+     ```bash
+     touch .github/workflows/deploy-angular-to-laravel.yml
+     ```
 
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+2. Abre el archivo y define un flujo básico:
+   ```yaml
+   name: Build and Deploy Angular to Laravel
+   on:
+     push:
+       branches:
+         - main

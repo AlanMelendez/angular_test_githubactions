@@ -14,12 +14,20 @@ jobs:
     # 1. Clonar el repositorio de Angular
     - name: Checkout Angular Repository
       uses: actions/checkout@v3
+      
+    # 1.1. Caché de módulos Node.js
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 20.12.0
+        cache: 'npm'  # Habilita la caché de dependencias
 
     # 2. Configurar Node.js
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
         node-version: 20.12.0
+        cache: 'npm'  # Habilita la caché de dependencias
 
     # 3. Instalar dependencias y construir Angular
     - name: Install and Build Angular
